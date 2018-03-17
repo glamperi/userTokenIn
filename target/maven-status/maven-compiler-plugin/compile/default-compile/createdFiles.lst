@@ -1,0 +1,11 @@
+com/redhat/gss/wss/SecureServiceService.class
+com/redhat/gss/wss/SayGoodbyeResponse.class
+org/test/MyBean.class
+com/redhat/gss/wss/SayGoodbye.class
+com/redhat/gss/wss/package-info.class
+org/test/MyServlet.class
+com/redhat/gss/wss/ObjectFactory.class
+com/redhat/gss/wss/SayHelloResponse.class
+com/redhat/gss/wss/SayHello.class
+com/redhat/gss/wss/SecureService.class
+com/redhat/gss/wss/UTPasswordCallback.class

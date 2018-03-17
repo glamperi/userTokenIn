@@ -1,0 +1,43 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd     http://camel.apache.org/schema/cxf           http://camel.apache.org/schema/cxf/camel-cxf.xsd">
+    <bean class="org.test.MyBean" id="helloBean"/>
+                <bean id="wss4jOutInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+                   <constructor-arg>
+                       <map>
+                           <entry key="action" value="UsernameToken Timestamp"/>
+                           <entry key="passwordType" value="PasswordText"/>
+                           <entry key="user" value="gary"/>
+                           <entry key="passwordCallbackClass" value="com.redhat.gss.wss.UTPasswordCallback"/>
+                       </map>
+                   </constructor-arg>
+                </bean>
+    <camelContext id="JDECustomer" xmlns="http://camel.apache.org/schema/spring">
+        <route id="_jdeCustomerRoute">
+            <from id="_from1" uri="direct-vm:jdeCustomer"/>
+           <log id="_log1" message="in JDE Customer"/>
+            <log id="_log2" message="${body}"/>
+            <setHeader headerName="operationName" id="_setHeader1">
+                <constant>processAddressBookV2</constant>
+            </setHeader>
+            <setHeader headerName="operationNamespace" id="_setHeader2">
+                <constant>http://localhost:8080/usernameToken/SecureService/</constant>
+            </setHeader>
+
+            <to id="_to1" uri="cxf:bean:serviceInvoke"/>
+
+        </route>
+    </camelContext>
+
+    <cxf:cxfEndpoint
+        address="http://localhost:8080/usernameToken/SecureService"
+        id="serviceInvoke" serviceClass="com.redhat.gss.wss.SecureService">
+        <cxf:properties>
+            <entry key="dataFormat" value="PAYLOAD"/>
+          </cxf:properties>
+
+                                  <cxf:outInterceptors >
+                                                <ref bean="wss4jOutInterceptor"/>
+                                </cxf:outInterceptors>
+
+                </cxf:cxfEndpoint>
